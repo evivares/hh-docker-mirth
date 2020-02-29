@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - mirth-db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    env_file: .env.postgres
+    networks:
+      - mirth
+
+  mirth:
+    image: nextgenhealthcare/connect
+    volumes:
+      - mirth-appdata:/opt/mirthconnect/appdata
+      - mirth-conf:/opt/mirthconnect/conf
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+      - "5000:5000"
+    restart: unless-stopped
+    env_file: .env.mirth
+    networks:
+      - mirth
+
+networks:
+  mirth:
+
+volumes:
+  mirth-db:
+  mirth-appdata:
+  mirth-conf:
